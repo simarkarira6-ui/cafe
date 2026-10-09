@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scoop & Sizzle — Café Admin & Supabase Manager</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="stylesheet" href="styles/variables.css">
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/components.css">
+  <link rel="stylesheet" href="styles/cart.css">
+
+  <style>
+    body {
+      background-color: #F8F4EE;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Admin Navigation */
+    .admin-navbar {
+      background-color: var(--color-chocolate-dark);
+      color: var(--color-white);
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 16px rgba(43, 22, 16, 0.15);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .admin-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 800;
+      font-size: 1.15rem;
+    }
+
+    .admin-pill-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.75rem;
+      font-weight: 700;
+      background-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .admin-pill-status.connected {
+      background-color: #10B981;
+      color: #FFFFFF;
+    }
+
+    .admin-pill-status.warning {
+      background-color: #F59E0B;
+      color: #FFFFFF;
+    }
+
+    /* Admin Container & Layout */
+    .admin-main {
+      flex-grow: 1;
+      max-width: 1280px;
+      width: 100%;
+      margin: 2rem auto;
+      padding: 0 1.25rem;
+    }
+
+    /* Admin Tabs */
+    .admin-nav-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.75rem;
+      border-bottom: 2px solid var(--color-chocolate-border);
+      padding-bottom: 0.5rem;
+      overflow-x: auto;
+    }
+
+    .admin-tab-btn {
+      padding: 0.65rem 1.25rem;
+      font-weight: 800;
+      font-size: 0.9375rem;
+      color: var(--color-chocolate-muted);
+      border-radius: var(--radius-sm);
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      white-space: nowrap;
+    }
+
+    .admin-tab-btn:hover {
+      color: var(--color-chocolate-dark);
+      background-color: var(--color-vanilla-warm);
+    }
+
+    .admin-tab-btn.active {
+      color: var(--color-white);
+      background-color: var(--color-chocolate-dark);
+    }
+
+    /* Stats Grid */
+    .stats-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .stats-card {
+      background-color: var(--color-white);
+      padding: 1.5rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-chocolate-border);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stats-card-val {
+      font-family: var(--font-heading);
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--color-chocolate-dark);
+      margin-bottom: 0.2rem;
+    }
+
+    .stats-card-label {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--color-chocolate-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Admin Table Styling */
+    .admin-panel-card {
+      background-color: var(--color-white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-chocolate-border);
+      box-shadow: var(--shadow-sm);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .panel-header-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .admin-table-wrap {
+      overflow-x: auto;
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.875rem;
+    }
+
+    .admin-table th {
+      padding: 0.875rem 1rem;
+      background-color: var(--color-vanilla-warm);
+      color: var(--color-chocolate-dark);
+      font-weight: 800;
+      border-bottom: 2px solid var(--color-chocolate-border);
+      white-space: nowrap;
+    }
+
+    .admin-table td {
+      padding: 0.875rem 1rem;
+      border-bottom: 1px solid var(--color-vanilla-deep);
+      vertical-align: middle;
+    }
+
+    .admin-table tr:hover td {
+      background-color: var(--color-vanilla-light);
+    }
+
+    .table-thumb {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      object-fit: cover;
+      background-color: var(--color-vanilla-warm);
+    }
+
+    .badge-status {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .badge-status.new { background: #FEF3C7; color: #92400E; }
+    .badge-status.preparing { background: #DBEAFE; color: #1E40AF; }
+    .badge-status.ready { background: #D1FAE5; color: #065F46; }
+    .badge-status.completed { background: #E5E7EB; color: #374151; }
+
+    /* Modal Styling */
+    .admin-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(43, 22, 16, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 300;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .admin-modal-backdrop.open {
+      display: flex;
+    }
+
+    .admin-modal {
+      background-color: var(--color-white);
+      border-radius: var(--radius-xl);
+      max-width: 580px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2rem;
+      box-shadow: var(--shadow-float);
+      border: 1px solid var(--color-chocolate-border);
+    }
+
+    .admin-form-group {
+      margin-bottom: 1.15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .admin-form-group label {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--color-chocolate-dark);
+    }
+
+    .admin-form-input, .admin-form-select, .admin-form-textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--color-chocolate-border);
+      font-size: 0.9375rem;
+    }
+
+    .admin-form-input:focus, .admin-form-textarea:focus {
+      outline: none;
+      border-color: var(--color-strawberry);
+    }
+
+    /* SQL Snippet Box */
+    .sql-box {
+      background-color: #1E1E2E;
+      color: #CDD6F4;
+      font-family: monospace;
+      padding: 1.25rem;
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      max-height: 340px;
+      white-space: pre-wrap;
+    }
+
+    /* Login Overlay */
+    .admin-auth-lock {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, var(--color-chocolate-dark) 0%, #45261D 100%);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .auth-card {
+      background: var(--color-white);
+      padding: 2.5rem;
+      border-radius: var(--radius-xl);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: var(--shadow-float);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ADMIN AUTHENTICATION LOCK -->
+  <div id="authLockModal" class="admin-auth-lock">
+    <div class="auth-card">
+      <div style="font-size: 3rem; margin-bottom: 0.5rem;">🍨🔒</div>
+      <h2 style="font-family: var(--font-heading); color: var(--color-chocolate-dark); margin-bottom: 0.5rem;">Café Owner Portal</h2>
+      <p style="color: var(--color-chocolate-muted); font-size: 0.875rem; margin-bottom: 1.25rem;">Enter Admin PIN to manage menu items, live orders, and Supabase cloud sync.</p>
+      
+      <form id="authPinForm">
+        <input type="text" id="authPinInput" class="admin-form-input" placeholder="Enter PIN (e.g. 1234)" value="1234" style="text-align: center; font-size: 1.25rem; font-weight: 800; letter-spacing: 0.15em; margin-bottom: 0.85rem;" autofocus>
+        <button type="submit" id="submitPinBtn" class="btn btn-primary" style="width: 100%;">Unlock Admin Dashboard</button>
+        <button type="button" id="quickUnlockBtn" class="btn btn-strawberry" style="width: 100%; margin-top: 0.65rem;">
+          ⚡ 1-Click Instant Unlock
+        </button>
+        <div id="pinErrorMsg" style="color: var(--color-strawberry-deep); font-weight: 700; font-size: 0.8125rem; margin-top: 0.75rem; min-height: 1.2rem;"></div>
+      </form>
+      <p style="font-size: 0.75rem; color: var(--color-chocolate-muted); margin-top: 0.5rem;">
+        Default access PIN: <strong>1234</strong> (or click 1-Click Instant Unlock)
+      </p>
+    </div>
+  </div>
+
+  <!-- TOP ADMIN NAVBAR -->
+  <header class="admin-navbar">
+    <div class="admin-brand">
+      <span>🍦</span>
+      <span>Scoop & Sizzle Admin</span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <div id="supabaseStatusBadge" class="admin-pill-status warning">
+        <span>⚡</span> <span id="supabaseStatusText">Connecting Supabase...</span>
+      </div>
+      <a href="index.html" class="btn btn-cream" style="padding: 0.4rem 1rem; font-size: 0.8125rem;">
+        View Live Store →
+      </a>
+      <button id="logoutBtn" class="btn btn-outline" style="color: #fff; border-color: rgba(255,255,255,0.4); padding: 0.4rem 0.8rem; font-size: 0.8125rem;">
+        Exit
+      </button>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <!-- NAVIGATION TABS -->
+    <nav class="admin-nav-tabs">
+      <button class="admin-tab-btn active" data-tab="dashboard">📊 Dashboard</button>
+      <button class="admin-tab-btn" data-tab="menu">🍨 Menu Manager (<span id="totalMenuCount">18</span>)</button>
+      <button class="admin-tab-btn" data-tab="orders">📋 Customer Orders (<span id="totalOrdersCount">0</span>)</button>
+      <button class="admin-tab-btn" data-tab="settings">⚙️ Store Settings</button>
+      <button class="admin-tab-btn" data-tab="supabase">🗄️ Supabase Cloud</button>
+    </nav>
+
+    <!-- TAB 1: DASHBOARD OVERVIEW -->
+    <section id="tab-dashboard" class="admin-tab-content">
+      <div class="stats-cards-grid">
+        <div class="stats-card">
+          <div class="stats-card-val" id="statItemsCount">18</div>
+          <div class="stats-card-label">Total Menu Items</div>
+        </div>
+        <div class="stats-card">
+          <div class="stats-card-val" id="statCategoriesCount">5</div>
+          <div class="stats-card-label">Active Categories</div>
+        </div>
+        <div class="stats-card">
+          <div class="stats-card-val" id="statOrdersCount">0</div>
+          <div class="stats-card-label">Logged Orders</div>
+        </div>
+        <div class="stats-card">
+          <div class="stats-card-val" id="statEstRevenue">$0.00</div>
+          <div class="stats-card-label">Estimated Revenue</div>
+        </div>
+      </div>
+
+      <!-- Quick Action Panel -->
+      <div class="admin-panel-card">
+        <div class="panel-header-actions">
+          <div>
+            <h3 style="font-family: var(--font-heading); color: var(--color-chocolate-dark);">Supabase Cloud Integration</h3>
+            <p style="color: var(--color-chocolate-muted); font-size: 0.875rem;">Connected to project <strong>cvrqfqmketfhcrdlqcws</strong> with publishable & JWT keys.</p>
+          </div>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button id="btnOpenSqlModal" class="btn btn-primary" style="padding: 0.55rem 1rem; font-size: 0.8125rem;">
+              📜 Run SQL Schema in Supabase
+            </button>
+            <button id="btnSyncWithCloud" class="btn btn-strawberry" style="padding: 0.55rem 1rem; font-size: 0.8125rem;">
+              ☁️ Test Cloud Sync
+            </button>
+          </div>
+        </div>
+        <div id="connectionDiagnostic" style="padding: 1rem; background: var(--color-vanilla-warm); border-radius: var(--radius-sm); font-size: 0.875rem;">
+          Checking database connection and schema tables...
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: MENU MANAGER -->
+    <section id="tab-menu" class="admin-tab-content" style="display: none;">
+      <div class="admin-panel-card">
+        <div class="panel-header-actions">
+          <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <input type="text" id="adminMenuSearch" class="admin-form-input" placeholder="Search menu..." style="max-width: 260px;">
+            <select id="adminCategoryFilter" class="admin-form-select" style="max-width: 200px;">
+              <option value="all">All Categories</option>
+              <option value="ice-cream">Ice Cream</option>
+              <option value="shakes">Thick Shakes</option>
+              <option value="sundaes-waffles">Sundaes & Waffles</option>
+              <option value="burgers">Burgers & Sandwiches</option>
+              <option value="hot-snacks">Fries & Hot Snacks</option>
+            </select>
+          </div>
+          <button id="btnAddNewItem" class="btn btn-strawberry">
+            + Add New Menu Item
+          </button>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Item Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Badge</th>
+                <th>Dietary</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminMenuTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: CUSTOMER ORDERS -->
+    <section id="tab-orders" class="admin-tab-content" style="display: none;">
+      <div class="admin-panel-card">
+        <div class="panel-header-actions">
+          <div>
+            <h3 style="font-family: var(--font-heading); color: var(--color-chocolate-dark);">Incoming Customer Orders</h3>
+            <p style="color: var(--color-chocolate-muted); font-size: 0.875rem;">Orders submitted via the WhatsApp order tray are automatically tracked here.</p>
+          </div>
+          <button id="btnRefreshOrders" class="btn btn-outline" style="padding: 0.5rem 1rem;">
+            🔄 Refresh
+          </button>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Type</th>
+                <th>Items Ordered</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="adminOrdersTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: STORE SETTINGS -->
+    <section id="tab-settings" class="admin-tab-content" style="display: none;">
+      <div class="admin-panel-card" style="max-width: 720px; margin: 0 auto;">
+        <h3 style="font-family: var(--font-heading); color: var(--color-chocolate-dark); margin-bottom: 1.25rem;">Café Store Configuration</h3>
+        
+        <form id="storeSettingsForm">
+          <div class="admin-form-group">
+            <label>Café Name</label>
+            <input type="text" id="settingStoreName" class="admin-form-input" value="Scoop & Sizzle">
+          </div>
+          <div class="admin-form-group">
+            <label>Tagline</label>
+            <input type="text" id="settingTagline" class="admin-form-input" value="Scoops of Happiness. Bites of Heaven.">
+          </div>
+          <div class="admin-form-group">
+            <label>WhatsApp Number (With country code, e.g. +15557266779)</label>
+            <input type="text" id="settingWhatsApp" class="admin-form-input" value="+15557266779">
+          </div>
+          <div class="admin-form-group">
+            <label>Physical Address</label>
+            <input type="text" id="settingAddress" class="admin-form-input" value="142 Artisan Boulevard, Sweet Valley, CA 90210">
+          </div>
+          <div class="admin-form-group">
+            <label>Currency Symbol</label>
+            <input type="text" id="settingCurrency" class="admin-form-input" value="$" style="max-width: 80px;">
+          </div>
+          <div class="admin-form-group">
+            <label>Top Announcement Bar Promo Text</label>
+            <input type="text" id="settingAnnouncement" class="admin-form-input" value="Get a free Scoop with any Gourmet Smash Combo this week! Order via WhatsApp.">
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">
+            💾 Save Settings & Update Store
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 5: SUPABASE CLOUD SETUP & SQL -->
+    <section id="tab-supabase" class="admin-tab-content" style="display: none;">
+      <div class="admin-panel-card">
+        <h3 style="font-family: var(--font-heading); color: var(--color-chocolate-dark); margin-bottom: 0.5rem;">Supabase Cloud Connection Details</h3>
+        <p style="color: var(--color-chocolate-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">
+          Your Supabase instance is configured with Project URL: <code>https://cvrqfqmketfhcrdlqcws.supabase.co</code>.
+        </p>
+
+        <div style="background: var(--color-vanilla-warm); padding: 1.25rem; border-radius: var(--radius-md); margin-bottom: 1.5rem;">
+          <h4 style="font-weight: 800; color: var(--color-chocolate-dark); margin-bottom: 0.5rem;">🚀 1-Click Database Setup Instructions</h4>
+          <ol style="margin-left: 1.5rem; font-size: 0.875rem; line-height: 1.7;">
+            <li>Open the Supabase SQL Editor: <a href="https://supabase.com/dashboard/project/cvrqfqmketfhcrdlqcws/sql" target="_blank" rel="noopener" style="color: var(--color-strawberry-deep); font-weight: 700; text-decoration: underline;">Click here to open SQL Editor</a>.</li>
+            <li>Click <strong>Copy SQL Schema Script</strong> below.</li>
+            <li>Paste into the Supabase SQL query window and click <strong>Run</strong>.</li>
+            <li>That's it! Your tables (<code>menu_items</code>, <code>orders</code>, <code>categories</code>) will be created and seeded with all initial data.</li>
+          </ol>
+          <button id="btnCopySql" class="btn btn-primary" style="margin-top: 1rem;">
+            📋 Copy SQL Schema Script to Clipboard
+          </button>
+        </div>
+
+        <h4 style="font-weight: 800; margin-bottom: 0.75rem;">Full Database SQL Schema (`supabase_schema.sql`):</h4>
+        <div class="sql-box" id="sqlDisplayBox">Loading SQL schema...</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ADD / EDIT MENU ITEM MODAL -->
+  <div id="itemModalBackdrop" class="admin-modal-backdrop">
+    <div class="admin-modal">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3 id="modalTitle" style="font-family: var(--font-heading); color: var(--color-chocolate-dark);">Add Menu Item</h3>
+        <button id="btnCloseModal" style="font-size: 1.25rem; cursor: pointer;">✕</button>
+      </div>
+
+      <form id="itemForm">
+        <input type="hidden" id="itemId">
+
+        <div class="admin-form-group">
+          <label for="itemName">Item Name *</label>
+          <input type="text" id="itemName" class="admin-form-input" required placeholder="e.g. Pistachio Gelato Delight">
+        </div>
+
+        <div class="admin-form-group">
+          <label for="itemCategory">Category *</label>
+          <select id="itemCategory" class="admin-form-select" required>
+            <option value="ice-cream">Handcrafted Ice Cream</option>
+            <option value="shakes">Velvet Thick Shakes</option>
+            <option value="sundaes-waffles">Sundaes & Waffles</option>
+            <option value="burgers">Burgers & Sandwiches</option>
+            <option value="hot-snacks">Fries & Hot Snacks</option>
+          </select>
+        </div>
+
+        <div class="admin-form-group">
+          <label for="itemPrice">Price ($) *</label>
+          <input type="number" id="itemPrice" class="admin-form-input" step="0.05" min="0" required placeholder="e.g. 5.95">
+        </div>
+
+        <div class="admin-form-group">
+          <label for="itemDesc">Description</label>
+          <textarea id="itemDesc" class="admin-form-textarea" rows="3" placeholder="Appetizing description..."></textarea>
+        </div>
+
+        <div class="admin-form-group">
+          <label for="itemImage">Image URL</label>
+          <input type="url" id="itemImage" class="admin-form-input" placeholder="https://images.unsplash.com/...">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div class="admin-form-group">
+            <label for="itemBadge">Badge / Label</label>
+            <input type="text" id="itemBadge" class="admin-form-input" placeholder="e.g. Bestseller, Chef Pick">
+          </div>
+          <div class="admin-form-group">
+            <label for="itemCalories">Calories</label>
+            <input type="text" id="itemCalories" class="admin-form-input" placeholder="e.g. 320 kcal">
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem;">
+          <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 0.875rem;">
+            <input type="checkbox" id="itemBestseller"> Featured Bestseller
+          </label>
+          <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 0.875rem;">
+            <input type="checkbox" id="itemIsVeg" checked> Vegetarian 🌱
+          </label>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
+          <button type="button" id="btnCancelModal" class="btn btn-cream">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Item</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast-container" id="adminToastContainer"></div>
+
+  <script type="module" src="scripts/adminApp.js"></script>
+</body>
+</html>

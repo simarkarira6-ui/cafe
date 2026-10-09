@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Scoop & Sizzle — Artisanal Ice Cream, Shakes & Gourmet Hot Food</title>
+  <meta name="description" content="Welcome to Scoop & Sizzle! Savor handcrafted artisanal ice cream, velvet thickshakes, warm Belgian waffle sundaes, and gourmet sizzling burgers. Order directly via WhatsApp.">
+  <meta name="theme-color" content="#2B1610">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="restaurant.restaurant">
+  <meta property="og:title" content="Scoop & Sizzle — Ice Cream Café & Gourmet Hot Bites">
+  <meta property="og:description" content="Scoops of Happiness. Bites of Heaven. Handcrafted ice cream, thickshakes, waffles, and smash burgers.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1501443762994-82bd5dace89a?auto=format&fit=crop&w=1200&q=80">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="styles/variables.css">
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/components.css">
+  <link rel="stylesheet" href="styles/cart.css">
+  <link rel="stylesheet" href="styles/responsive.css">
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "IceCreamShop",
+    "name": "Scoop & Sizzle",
+    "image": "https://images.unsplash.com/photo-1501443762994-82bd5dace89a?auto=format&fit=crop&w=1200&q=80",
+    "telephone": "+1-555-726-6779",
+    "servesCuisine": ["Ice Cream", "Desserts", "Milkshakes", "Burgers", "Fast Casual"],
+    "priceRange": "$$",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "142 Artisan Boulevard",
+      "addressLocality": "Sweet Valley",
+      "addressRegion": "CA",
+      "postalCode": "90210",
+      "addressCountry": "US"
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday"],
+        "opens": "11:00",
+        "closes": "22:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Friday", "Saturday"],
+        "opens": "11:00",
+        "closes": "23:30"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Sunday",
+        "opens": "12:00",
+        "closes": "22:00"
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <!-- =========================================================================
+       1. ANNOUNCEMENT BAR
+       ========================================================================= -->
+  <aside id="announcementBar" class="announcement-bar" aria-label="Special announcements"></aside>
+
+  <!-- =========================================================================
+       2. STICKY RESPONSIVE NAVIGATION
+       ========================================================================= -->
+  <header class="site-header" id="siteHeader">
+    <div class="container nav-container">
+      <!-- Brand Identity -->
+      <a href="#" class="brand-logo" aria-label="Scoop & Sizzle Home">
+        <div class="brand-icon" aria-hidden="true">🍦</div>
+        <div class="brand-name">
+          <span class="brand-name-main js-store-name">Scoop & Sizzle</span>
+          <span class="brand-name-sub">Dessert & Hot Food Café</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="nav-links" aria-label="Main Navigation">
+        <a href="#categories" class="nav-link">Categories</a>
+        <a href="#bestsellers" class="nav-link">Bestsellers</a>
+        <a href="#menu" class="nav-link">Full Menu</a>
+        <a href="#offers" class="nav-link">Combos</a>
+        <a href="#story" class="nav-link">Our Story</a>
+        <a href="#contact" class="nav-link">Find Us</a>
+      </nav>
+
+      <!-- Nav Actions -->
+      <div class="nav-actions">
+        <!-- Cart Drawer Button -->
+        <button class="cart-trigger-btn js-open-cart" aria-label="View Order Tray">
+          <span aria-hidden="true">🛒</span>
+          <span class="cart-text">Tray</span>
+          <span class="cart-badge js-cart-count">0</span>
+        </button>
+
+        <!-- Order Now Primary Action -->
+        <a href="#menu" class="btn btn-primary" style="display: none; @media(min-width: 640px) { display: inline-flex; }">Order Now</a>
+
+        <!-- Mobile Navigation Toggle -->
+        <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Open mobile navigation" aria-expanded="false" aria-controls="mobileNavDrawer">
+          ☰
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       MOBILE NAVIGATION DRAWER
+       ========================================================================= -->
+  <div class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
+  <aside class="mobile-nav-drawer" id="mobileNavDrawer" aria-label="Mobile Navigation">
+    <div class="mobile-nav-header">
+      <div class="brand-logo">
+        <div class="brand-icon" aria-hidden="true">🍦</div>
+        <span class="brand-name-main js-store-name">Scoop & Sizzle</span>
+      </div>
+      <button class="mobile-nav-close" id="menuCloseBtn" aria-label="Close navigation">✕</button>
+    </div>
+
+    <nav class="mobile-nav-links">
+      <a href="#categories" class="mobile-nav-link">Browse Categories <span>→</span></a>
+      <a href="#bestsellers" class="mobile-nav-link">Bestseller Treats <span>→</span></a>
+      <a href="#menu" class="mobile-nav-link">Full Menu & Ordering <span>→</span></a>
+      <a href="#offers" class="mobile-nav-link">Special Offers & Deals <span>→</span></a>
+      <a href="#story" class="mobile-nav-link">Our Café Story <span>→</span></a>
+      <a href="#reviews" class="mobile-nav-link">Customer Reviews <span>→</span></a>
+      <a href="#contact" class="mobile-nav-link">Location & Hours <span>→</span></a>
+    </nav>
+
+    <div class="mobile-nav-cta">
+      <button class="btn btn-strawberry js-open-cart" style="width: 100%;">
+        View Order Tray (<span class="js-cart-count">0</span>)
+      </button>
+      <a href="https://wa.me/15557266779" class="btn btn-outline js-store-whatsapp" style="width: 100%;" target="_blank" rel="noopener">
+        Chat on WhatsApp
+      </a>
+    </div>
+  </aside>
+
+  <main>
+    <!-- =======================================================================
+         3. HERO SECTION
+         ======================================================================= -->
+    <section class="hero-section" id="hero">
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <div class="hero-badge-pill">
+            <span class="pill-dot"></span>
+            <span>Handcrafted Daily in Small Batches</span>
+          </div>
+
+          <h1 class="hero-title">
+            Scoops of Happiness. <br>
+            <span class="title-accent">Bites of Heaven.</span>
+          </h1>
+
+          <p class="hero-description">
+            From slow-churned double cream gelatos and velvet thickshakes to freshly pressed Belgian waffles and sizzling Angus smash burgers. Freshly made with love, served every day.
+          </p>
+
+          <div class="hero-ctas">
+            <a href="#menu" class="btn btn-strawberry">
+              Explore Our Menu 🍦
+            </a>
+            <button class="btn btn-primary js-open-cart">
+              Order on WhatsApp 💬
+            </button>
+          </div>
+
+          <div class="hero-stats">
+            <div class="stat-item">
+              <span class="stat-value">25+</span>
+              <span class="stat-label">Artisan Flavors</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">100%</span>
+              <span class="stat-label">Real Farm Dairy</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">4.9 ★</span>
+              <span class="stat-label">Customer Rating</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="hero-arch-wrapper">
+            <!-- Arched Photo Frame -->
+            <div class="hero-arch-card">
+              <img src="https://images.unsplash.com/photo-1501443762994-82bd5dace89a?auto=format&fit=crop&w=800&q=80" 
+                   alt="Artisanal Strawberry Cream Scoop Ice Cream with cone" 
+                   width="600" height="750" fetchpriority="high">
+            </div>
+
+            <!-- Floating Proof Badges -->
+            <div class="floating-badge floating-badge-top">
+              <div class="badge-icon-box pink">🍦</div>
+              <div>
+                <div class="badge-text-primary">100% Churned Fresh</div>
+                <div class="badge-text-secondary">Pure Bourbon Vanilla & Cocoa</div>
+              </div>
+            </div>
+
+            <div class="floating-badge floating-badge-bottom">
+              <div class="badge-icon-box pistachio">🍔</div>
+              <div>
+                <div class="badge-text-primary">Sizzling Hot Food</div>
+                <div class="badge-text-secondary">Smash Burgers & Truffle Fries</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         MARQUEE TICKER RIBBON (Signature aesthetic from reference designs)
+         ======================================================================= -->
+    <div class="ticker-ribbon" aria-hidden="true">
+      <div class="ticker-track">
+        <div class="ticker-item"><span class="ticker-bullet">🍦</span> ARTISAN ICE CREAM</div>
+        <div class="ticker-item"><span class="ticker-bullet">🍔</span> SIZZLING GOURMET BURGERS</div>
+        <div class="ticker-item"><span class="ticker-bullet">🥤</span> VELVET THICK SHAKES</div>
+        <div class="ticker-item"><span class="ticker-bullet">🧇</span> FRESH BELGIAN WAFFLES</div>
+        <div class="ticker-item"><span class="ticker-bullet">🍟</span> SEASONED CRISPY FRIES</div>
+        <div class="ticker-item"><span class="ticker-bullet">🍫</span> HOT FUDGE SUNDAES</div>
+        <!-- Duplicated track for smooth infinite marquee -->
+        <div class="ticker-item"><span class="ticker-bullet">🍦</span> ARTISAN ICE CREAM</div>
+        <div class="ticker-item"><span class="ticker-bullet">🍔</span> SIZZLING GOURMET BURGERS</div>
+        <div class="ticker-item"><span class="ticker-bullet">🥤</span> VELVET THICK SHAKES</div>
+        <div class="ticker-item"><span class="ticker-bullet">🧇</span> FRESH BELGIAN WAFFLES</div>
+        <div class="ticker-item"><span class="ticker-bullet">🍟</span> SEASONED CRISPY FRIES</div>
+        <div class="ticker-item"><span class="ticker-bullet">🍫</span> HOT FUDGE SUNDAES</div>
+      </div>
+    </div>
+
+    <!-- =======================================================================
+         4. CATEGORY EXPLORER
+         ======================================================================= -->
+    <section class="section" id="categories">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Explore The Menu</span>
+          <h2 class="section-title">Crafted for Every Craving</h2>
+          <p class="section-subtitle">Whether you're after an ice-cold sweet dessert or a warm, savory smash burger, we've got your table covered.</p>
+        </div>
+
+        <div class="category-grid" id="categoryExplorer">
+          <!-- Populated dynamically by app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         5. BESTSELLERS SHOWCASE
+         ======================================================================= -->
+    <section class="section section-warm" id="bestsellers">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag pistachio">Fan Favorites</span>
+          <h2 class="section-title">Most-Loved Bestsellers</h2>
+          <p class="section-subtitle">Our regulars can't get enough of these handcrafted specialties. Try them on your first visit!</p>
+        </div>
+
+        <div class="product-grid" id="bestsellersGrid">
+          <!-- Populated dynamically by app.js -->
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem;">
+          <a href="#menu" class="btn btn-primary">Browse Complete Menu (18+ Items) →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         6. FULL MENU WITH CATEGORY TABS & SEARCH
+         ======================================================================= -->
+    <section class="section" id="menu">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Complete Selection</span>
+          <h2 class="section-title">The Full Café Menu</h2>
+          <p class="section-subtitle">Select any category or search your favorite flavor to build your custom tray.</p>
+        </div>
+
+        <!-- Menu Filter Controls -->
+        <div class="menu-controls">
+          <div class="menu-search-wrapper">
+            <span class="menu-search-icon" aria-hidden="true">🔍</span>
+            <input type="search" id="menuSearchInput" class="menu-search-input" placeholder="Search ice cream, burgers, shakes, fries..." aria-label="Search menu items">
+          </div>
+
+          <div class="menu-tabs" id="menuTabs" role="tablist" aria-label="Filter menu by category">
+            <!-- Populated dynamically by app.js -->
+          </div>
+        </div>
+
+        <!-- Menu Item Cards -->
+        <div class="product-grid" id="fullMenuGrid">
+          <!-- Populated dynamically by app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         7. SPECIAL OFFERS & COMBOS
+         ======================================================================= -->
+    <section class="section section-cream" id="offers">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Sweet & Sizzle Combos</span>
+          <h2 class="section-title">Curated Value Deals</h2>
+          <p class="section-subtitle">Pair your favorite hot savory burger with our cold dessert scoops and save with our handcrafted combos.</p>
+        </div>
+
+        <div class="offers-grid" id="specialOffersGrid">
+          <!-- Populated dynamically by app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         8. ABOUT THE CAFÉ ("OUR STORY")
+         ======================================================================= -->
+    <section class="section" id="story">
+      <div class="container about-grid">
+        <div class="about-collage">
+          <div class="about-img-frame tall">
+            <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80" 
+                 alt="Warm cozy café counter and atmosphere" loading="lazy">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div class="about-img-frame stacked">
+              <img src="https://images.unsplash.com/photo-1505394033641-40c6ad1178d7?auto=format&fit=crop&w=800&q=80" 
+                   alt="Scooping freshly churned artisan gelato" loading="lazy">
+            </div>
+            <div class="about-img-frame stacked">
+              <img src="https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=800&q=80" 
+                   alt="Fresh breakfast and dessert waffle preparation" loading="lazy">
+            </div>
+          </div>
+        </div>
+
+        <div class="about-content-body">
+          <span class="section-tag pistachio">Our Philosophy</span>
+          <h2 class="section-title">Where Cold Meets Warm & Every Bite Delights</h2>
+          <p class="section-subtitle">
+            At Scoop & Sizzle, we believe food should be an experience of joyful contrasts: the cold creaminess of freshly churned gelato alongside the comforting heat of a freshly pressed Belgian waffle or a sizzled Angus burger.
+          </p>
+
+          <div class="about-highlight-box">
+            <p class="about-highlight-quote">
+              "We never cut corners on ingredients. Real heavy cream, organic vanilla pods, genuine Belgian chocolates, and certified fresh Angus cuts."
+            </p>
+          </div>
+
+          <div class="about-values-list">
+            <div class="about-value-card">
+              <div class="about-value-icon">🥛</div>
+              <div>
+                <h4 class="about-value-title">100% Real Dairy</h4>
+                <p class="about-value-desc">No artificial powders, just velvety whole cream.</p>
+              </div>
+            </div>
+            <div class="about-value-card">
+              <div class="about-value-icon">⏱️</div>
+              <div>
+                <h4 class="about-value-title">Fresh Small Batches</h4>
+                <p class="about-value-desc">Churned every morning for velvet texture.</p>
+              </div>
+            </div>
+            <div class="about-value-card">
+              <div class="about-value-icon">🔥</div>
+              <div>
+                <h4 class="about-value-title">Sizzled To Order</h4>
+                <p class="about-value-desc">Hot items served straight off the grill.</p>
+              </div>
+            </div>
+            <div class="about-value-card">
+              <div class="about-value-icon">📱</div>
+              <div>
+                <h4 class="about-value-title">Direct Kitchen WhatsApp</h4>
+                <p class="about-value-desc">Fast ordering with personal care.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         9. CUSTOMER REVIEWS / SWEET MOMENTS
+         ======================================================================= -->
+    <section class="section section-warm" id="reviews">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Sweet Community</span>
+          <h2 class="section-title">Made for Your Sweet Moments</h2>
+          <p class="section-subtitle">Here is what dessert explorers and food lovers are saying about their Scoop & Sizzle experience.</p>
+        </div>
+
+        <div class="testimonials-grid" id="testimonialsGrid">
+          <!-- Populated dynamically by app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         10. LOCATION & CONTACT
+         ======================================================================= -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag pistachio">Visit Our Parlour</span>
+          <h2 class="section-title">Drop In or Order Ahead</h2>
+          <p class="section-subtitle">We are conveniently located in Sweet Valley. Drop by for a treat or send your WhatsApp order for speedy pickup.</p>
+        </div>
+
+        <div class="contact-layout">
+          <!-- Store Info & Hours -->
+          <div class="contact-card-info">
+            <div class="info-item">
+              <div class="info-icon-box">📍</div>
+              <div>
+                <div class="info-label">Address</div>
+                <div class="info-text js-store-address">142 Artisan Boulevard, Sweet Valley, CA 90210</div>
+                <a id="openMapsBtn" href="#" class="announcement-link" target="_blank" rel="noopener" style="display: inline-block; margin-top: 0.35rem;">
+                  Get Directions in Google Maps →
+                </a>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-icon-box">🕒</div>
+              <div style="width: 100%;">
+                <div class="info-label">Opening Hours</div>
+                <div class="hours-table" id="hoursTable">
+                  <!-- Populated by app.js -->
+                </div>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-icon-box">📞</div>
+              <div>
+                <div class="info-label">Phone & Inquiries</div>
+                <div class="info-text"><a class="js-store-phone" href="#">+1 (555) 726-6779</a></div>
+                <div class="info-subtext">Call our counter during opening hours for table inquiries.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Direct Ordering / WhatsApp Box -->
+          <div class="contact-interactive-box">
+            <div>
+              <span class="section-tag" style="background: rgba(255,255,255,0.15); color: #fff; border: none;">Direct WhatsApp Kitchen</span>
+              <h3 class="contact-direct-title">Order Fast & Fresh Straight to the Grill</h3>
+              <p class="contact-direct-desc">
+                Skip third-party service fees! Select your items using our built-in menu tray, and send your order directly to our chef on WhatsApp for rapid confirmation.
+              </p>
+            </div>
+
+            <div class="contact-direct-actions">
+              <button class="whatsapp-order-btn js-open-cart">
+                <span>💬</span> Open Order Tray & WhatsApp
+              </button>
+              <a href="tel:15557266779" class="btn btn-outline" style="color: #fff; border-color: rgba(255,255,255,0.4);">
+                <span>📞</span> Call Kitchen Directly
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================================================================
+       11. SLIDE-OVER CART & WHATSAPP DRAWER
+       ========================================================================= -->
+  <div class="cart-backdrop" id="cartBackdrop"></div>
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Your Order Tray">
+    <div class="cart-header">
+      <h3 class="cart-header-title">
+        <span>Your Order Tray</span>
+        <span class="cart-count-badge js-cart-count">0</span>
+      </h3>
+      <button class="cart-close-btn" id="cartCloseBtn" aria-label="Close tray">✕</button>
+    </div>
+
+    <div class="cart-body" id="cartItemsList">
+      <!-- Populated dynamically by cart.js & app.js -->
+    </div>
+
+    <!-- Customer Form Section (Inside Drawer) -->
+    <div class="cart-form-section" style="margin: 0 1.5rem;">
+      <div class="cart-form-title">
+        <span>📋</span> Order & Contact Details
+      </div>
+
+      <div class="cart-input-group">
+        <label for="orderCustomerName" class="cart-input-label">Your Name</label>
+        <input type="text" id="orderCustomerName" class="cart-input" placeholder="e.g. Alex Miller" autocomplete="name">
+      </div>
+
+      <div class="cart-input-group">
+        <label for="orderCustomerPhone" class="cart-input-label">Phone Number (Optional)</label>
+        <input type="tel" id="orderCustomerPhone" class="cart-input" placeholder="e.g. (555) 019-2834" autocomplete="tel">
+      </div>
+
+      <div class="cart-input-group">
+        <label class="cart-input-label">Service Type</label>
+        <div class="order-type-tabs">
+          <button type="button" class="order-type-btn active js-order-type" data-type="Pickup / Takeaway">🏃 Pickup</button>
+          <button type="button" class="order-type-btn js-order-type" data-type="Local Delivery">🛵 Delivery</button>
+        </div>
+      </div>
+
+      <div class="cart-input-group">
+        <label for="orderCustomerNotes" class="cart-input-label">Special Kitchen Notes</label>
+        <input type="text" id="orderCustomerNotes" class="cart-input" placeholder="e.g. Extra chocolate drizzle, no pickles">
+      </div>
+    </div>
+
+    <div class="cart-footer">
+      <div class="cart-summary-row">
+        <span class="cart-summary-label">Estimated Subtotal:</span>
+        <span class="cart-summary-subtotal" id="cartSubtotalAmount">$0.00</span>
+      </div>
+
+      <button class="whatsapp-order-btn" id="sendWhatsAppOrderBtn">
+        <span>💬</span> Send Order via WhatsApp
+      </button>
+
+      <p class="order-disclosure">
+        ⚠️ <strong>Note:</strong> Pressing the button generates a ready WhatsApp message to our café counter. You must click <em>Send</em> inside WhatsApp to confirm your order with our staff.
+      </p>
+    </div>
+  </aside>
+
+  <!-- =========================================================================
+       12. MOBILE ELEVATED BOTTOM ORDER BAR
+       ========================================================================= -->
+  <div class="mobile-order-bar" id="mobileOrderBar" aria-live="polite">
+    <div class="mobile-order-info">
+      <span class="mobile-order-count" id="mobileOrderBarCount">0 items</span>
+      <span class="mobile-order-total" id="mobileOrderBarTotal">$0.00</span>
+    </div>
+    <button class="mobile-order-view-btn js-open-cart">
+      <span>View Tray</span> <span>🛒</span>
+    </button>
+  </div>
+
+  <!-- Toast Feedback Notifications -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- =========================================================================
+       13. FOOTER
+       ========================================================================= -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Brand Info -->
+        <div>
+          <a href="#" class="brand-logo" style="color: #fff;">
+            <div class="brand-icon" aria-hidden="true">🍦</div>
+            <span class="brand-name-main js-store-name">Scoop & Sizzle</span>
+          </a>
+          <p class="footer-brand-desc">
+            Artisanal handcrafted ice cream, thickshakes, waffles, and sizzling Angus smash burgers. Freshly made with love in Sweet Valley.
+          </p>
+          <div class="footer-social-links">
+            <a href="https://instagram.com" class="footer-social-btn" aria-label="Instagram" target="_blank" rel="noopener">📸</a>
+            <a href="https://facebook.com" class="footer-social-btn" aria-label="Facebook" target="_blank" rel="noopener">👍</a>
+            <a href="https://tiktok.com" class="footer-social-btn" aria-label="TikTok" target="_blank" rel="noopener">🎵</a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+          <h4 class="footer-heading">Quick Links</h4>
+          <ul class="footer-links-list">
+            <li class="footer-link-item"><a href="#hero">Home</a></li>
+            <li class="footer-link-item"><a href="#categories">Browse Categories</a></li>
+            <li class="footer-link-item"><a href="#bestsellers">Bestsellers</a></li>
+            <li class="footer-link-item"><a href="#menu">Full Menu</a></li>
+            <li class="footer-link-item"><a href="#offers">Special Offers</a></li>
+            <li class="footer-link-item"><a href="admin.html" style="color: #FFAEBC;">🔐 Owner Admin Portal</a></li>
+          </ul>
+        </div>
+
+        <!-- Café Hours -->
+        <div>
+          <h4 class="footer-heading">Café Hours</h4>
+          <ul class="footer-links-list">
+            <li class="footer-link-item" style="color: rgba(255,255,255,0.75);">Mon – Thu: 11am – 10pm</li>
+            <li class="footer-link-item" style="color: rgba(255,255,255,0.75);">Fri – Sat: 11am – 11:30pm</li>
+            <li class="footer-link-item" style="color: rgba(255,255,255,0.75);">Sun: 12pm – 10pm</li>
+          </ul>
+        </div>
+
+        <!-- Allergens & Contact Notice -->
+        <div>
+          <h4 class="footer-heading">Food & Allergens</h4>
+          <div class="footer-allergen-notice">
+            Our desserts and kitchen handle dairy, nuts, gluten, and eggs. Please specify any allergy requirements in your WhatsApp order notes.
+          </div>
+          <div style="margin-top: 1rem;">
+            <a href="https://wa.me/15557266779" class="btn btn-strawberry js-store-whatsapp" style="width: 100%;" target="_blank" rel="noopener">
+              WhatsApp Counter
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 Scoop & Sizzle Café. All rights reserved. <a href="admin.html" style="color: rgba(255,255,255,0.6); margin-left: 8px;">Admin Dashboard</a></div>
+        <div>Designed for dessert and food lovers with love.</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="scripts/data.js"></script>
+  <script type="module" src="scripts/cart.js"></script>
+  <script type="module" src="scripts/app.js"></script>
+</body>
+</html>
