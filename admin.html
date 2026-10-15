@@ -308,19 +308,13 @@
     <div class="auth-card">
       <div style="font-size: 3rem; margin-bottom: 0.5rem;">🍨🔒</div>
       <h2 style="font-family: var(--font-heading); color: var(--color-chocolate-dark); margin-bottom: 0.5rem;">Café Owner Portal</h2>
-      <p style="color: var(--color-chocolate-muted); font-size: 0.875rem; margin-bottom: 1.25rem;">Enter Admin PIN to manage menu items, live orders, and Supabase cloud sync.</p>
+      <p style="color: var(--color-chocolate-muted); font-size: 0.875rem; margin-bottom: 1.25rem;">Enter Admin Password to manage menu items, live orders, and Supabase cloud sync.</p>
       
       <form id="authPinForm">
-        <input type="text" id="authPinInput" class="admin-form-input" placeholder="Enter PIN (e.g. 1234)" value="1234" style="text-align: center; font-size: 1.25rem; font-weight: 800; letter-spacing: 0.15em; margin-bottom: 0.85rem;" autofocus>
+        <input type="password" id="authPinInput" class="admin-form-input" placeholder="Enter Admin Password" style="text-align: center; font-size: 1.15rem; font-weight: 700; margin-bottom: 0.85rem;" autofocus required autocomplete="current-password">
         <button type="submit" id="submitPinBtn" class="btn btn-primary" style="width: 100%;">Unlock Admin Dashboard</button>
-        <button type="button" id="quickUnlockBtn" class="btn btn-strawberry" style="width: 100%; margin-top: 0.65rem;">
-          ⚡ 1-Click Instant Unlock
-        </button>
         <div id="pinErrorMsg" style="color: var(--color-strawberry-deep); font-weight: 700; font-size: 0.8125rem; margin-top: 0.75rem; min-height: 1.2rem;"></div>
       </form>
-      <p style="font-size: 0.75rem; color: var(--color-chocolate-muted); margin-top: 0.5rem;">
-        Default access PIN: <strong>1234</strong> (or click 1-Click Instant Unlock)
-      </p>
     </div>
   </div>
 
@@ -505,6 +499,25 @@
 
           <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">
             💾 Save Settings & Update Store
+          </button>
+        </form>
+
+        <hr style="margin: 2.5rem 0 2rem; border: none; border-top: 2px dashed var(--color-chocolate-border);">
+
+        <h3 style="font-family: var(--font-heading); color: var(--color-chocolate-dark); margin-bottom: 0.4rem;">🔐 Security & Password</h3>
+        <p style="color: var(--color-chocolate-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">Update the password required to access this Admin Portal.</p>
+
+        <form id="changePasswordForm">
+          <div class="admin-form-group">
+            <label>New Admin Password</label>
+            <input type="password" id="inputNewPassword" class="admin-form-input" required placeholder="Enter new password (min. 4 characters)" autocomplete="new-password">
+          </div>
+          <div class="admin-form-group">
+            <label>Confirm New Password</label>
+            <input type="password" id="inputConfirmPassword" class="admin-form-input" required placeholder="Re-enter new password" autocomplete="new-password">
+          </div>
+          <button type="submit" class="btn btn-strawberry" style="margin-top: 0.5rem;">
+            🔑 Update Password
           </button>
         </form>
       </div>

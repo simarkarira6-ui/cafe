@@ -83,9 +83,48 @@ class SupabaseService {
   }
 
   /**
+   * Fetch Categories (from Supabase if available, fallback to local)
+   */
+  async getCategories() {
+    if (!this.hasTables) {
+      await this.checkConnection();
+    }
+
+    if (this.hasTables) {
+      try {
+        const res = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/categories?select=*&order=sort_order.asc`, {
+          headers: this.getHeaders()
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            return data.map(cat => ({
+              id: cat.id,
+              title: cat.title,
+              shortTitle: cat.short_title || cat.title,
+              count: cat.count || '',
+              description: cat.description || '',
+              image: cat.image || 'https://images.unsplash.com/photo-1501443762994-82bd5dace89a?auto=format&fit=crop&w=800&q=80',
+              badge: cat.badge || ''
+            }));
+          }
+        }
+      } catch (err) {
+        console.warn('Could not fetch categories from Supabase, using defaults', err);
+      }
+    }
+
+    return [...CATEGORIES];
+  }
+
+  /**
    * Fetch Menu Items (from Supabase if available, fallback to local)
    */
   async getMenuItems() {
+    if (!this.hasTables) {
+      await this.checkConnection();
+    }
+
     if (this.hasTables) {
       try {
         const res = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/menu_items?select=*&order=sort_order.asc`, {

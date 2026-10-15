@@ -24,50 +24,47 @@ class AdminController {
     await this.refreshData();
   }
 
-  // --- 1. PIN Security Lock ---
+  // --- 1. Security Authentication Lock ---
   initAuth() {
     const lockModal = document.getElementById('authLockModal');
     const authForm = document.getElementById('authPinForm');
     const pinInput = document.getElementById('authPinInput');
-    const quickUnlockBtn = document.getElementById('quickUnlockBtn');
     const errorMsg = document.getElementById('pinErrorMsg');
     const logoutBtn = document.getElementById('logoutBtn');
 
+    const getStoredPassword = () => {
+      return localStorage.getItem('scoop_admin_password_v1') || 'scoop2026';
+    };
+
     const unlock = () => {
       sessionStorage.setItem('scoop_admin_unlocked', 'true');
-      localStorage.setItem('scoop_admin_unlocked', 'true');
       if (lockModal) {
         lockModal.style.setProperty('display', 'none', 'important');
       }
       this.showToast('Welcome to Scoop & Sizzle Admin! 🍨');
     };
 
-    // Auto-unlock if previously authorized
-    if (sessionStorage.getItem('scoop_admin_unlocked') === 'true' || 
-        localStorage.getItem('scoop_admin_unlocked') === 'true') {
+    // Auto-unlock if current session is already authorized
+    if (sessionStorage.getItem('scoop_admin_unlocked') === 'true') {
       if (lockModal) lockModal.style.setProperty('display', 'none', 'important');
-    }
-
-    if (quickUnlockBtn) {
-      quickUnlockBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        unlock();
-      });
     }
 
     if (authForm) {
       authForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const pin = (pinInput ? pinInput.value : '').trim().toLowerCase();
-        
-        // Accept 1234, admin, scoop, 0000, or empty (defaults to pre-filled 1234)
-        if (pin === '1234' || pin === 'admin' || pin === 'scoop' || pin === '0000' || pin === '') {
+        const entered = (pinInput ? pinInput.value : '').trim();
+        const currentPass = getStoredPassword();
+
+        if (entered === currentPass || (currentPass === 'scoop2026' && (entered === '1234' || entered === 'admin'))) {
           unlock();
         } else {
           if (errorMsg) {
-            errorMsg.textContent = 'Invalid PIN. Try 1234 or click "1-Click Instant Unlock".';
+            errorMsg.textContent = 'Incorrect password. Please try again.';
           }
-          if (pinInput) pinInput.focus();
+          if (pinInput) {
+            pinInput.value = '';
+            pinInput.focus();
+          }
         }
       });
     }
@@ -382,22 +379,45 @@ class AdminController {
   // --- 7. Settings Controls ---
   initSettingsControls() {
     const form = document.getElementById('storeSettingsForm');
-    if (!form) return;
+    if (form) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const updatedConfig = {
+          name: document.getElementById('settingStoreName').value,
+          tagline: document.getElementById('settingTagline').value,
+          whatsappNumber: document.getElementById('settingWhatsApp').value,
+          address: document.getElementById('settingAddress').value,
+          currencySymbol: document.getElementById('settingCurrency').value,
+          announcementText: document.getElementById('settingAnnouncement').value
+        };
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const updatedConfig = {
-        name: document.getElementById('settingStoreName').value,
-        tagline: document.getElementById('settingTagline').value,
-        whatsappNumber: document.getElementById('settingWhatsApp').value,
-        address: document.getElementById('settingAddress').value,
-        currencySymbol: document.getElementById('settingCurrency').value,
-        announcementText: document.getElementById('settingAnnouncement').value
-      };
+        localStorage.setItem('scoop_sizzle_custom_settings_v1', JSON.stringify(updatedConfig));
+        this.showToast('Store settings saved! Updated on website.');
+      });
+    }
 
-      localStorage.setItem('scoop_sizzle_custom_settings_v1', JSON.stringify(updatedConfig));
-      this.showToast('Store settings saved! Updated on website.');
-    });
+    const pwForm = document.getElementById('changePasswordForm');
+    if (pwForm) {
+      pwForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const newPw = (document.getElementById('inputNewPassword')?.value || '').trim();
+        const confirmPw = (document.getElementById('inputConfirmPassword')?.value || '').trim();
+
+        if (newPw.length < 4) {
+          alert('Password must be at least 4 characters long.');
+          return;
+        }
+
+        if (newPw !== confirmPw) {
+          alert('Passwords do not match. Please verify and re-enter.');
+          return;
+        }
+
+        localStorage.setItem('scoop_admin_password_v1', newPw);
+        pwForm.reset();
+        this.showToast('Admin password updated successfully! 🔐');
+      });
+    }
   }
 
   // --- 8. SQL Preview & Copy ---

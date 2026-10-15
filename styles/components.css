@@ -267,6 +267,7 @@
   height: 100%;
   object-fit: cover;
   transition: transform var(--transition-normal);
+  color: transparent;
 }
 
 .category-card:hover .category-img-arch img {
@@ -280,6 +281,7 @@
   color: var(--color-chocolate-dark);
   margin-bottom: 0.25rem;
   line-height: 1.25;
+  word-break: break-word;
 }
 
 .category-card-count {

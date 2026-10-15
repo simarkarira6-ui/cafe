@@ -10,6 +10,7 @@ class App {
   constructor() {
     this.currentCategoryFilter = 'all';
     this.searchQuery = '';
+    this.categories = [...CATEGORIES];
     this.menuItems = [...MENU_ITEMS];
     this.customerDetails = {
       name: '',
@@ -24,15 +25,21 @@ class App {
   async init() {
     this.loadCustomSettings();
     this.renderStoreDetails();
-    this.renderCategories();
 
-    // Fetch dynamic menu items from Supabase / local cache
+    // Fetch dynamic categories and menu items from Supabase / local cache
+    try {
+      this.categories = await supabaseService.getCategories();
+    } catch (e) {
+      this.categories = [...CATEGORIES];
+    }
+
     try {
       this.menuItems = await supabaseService.getMenuItems();
     } catch (e) {
       this.menuItems = [...MENU_ITEMS];
     }
 
+    this.renderCategories();
     this.renderBestsellers();
     this.renderMenuTabs();
     this.renderMenuItems();
@@ -96,10 +103,10 @@ class App {
     const container = document.getElementById('categoryExplorer');
     if (!container) return;
 
-    container.innerHTML = CATEGORIES.map(cat => `
+    container.innerHTML = this.categories.map(cat => `
       <div class="category-card" data-category="${cat.id}" role="button" tabindex="0" aria-label="Explore ${cat.title}">
         <div class="category-img-arch">
-          <img src="${cat.image}" alt="${cat.title}" loading="lazy" width="300" height="350">
+          <img src="${cat.image}" alt="${cat.title}" loading="lazy" width="300" height="350" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=800&q=80';">
         </div>
         <h3 class="category-card-title">${cat.shortTitle}</h3>
         <span class="category-card-count">${cat.count}</span>
@@ -143,7 +150,7 @@ class App {
 
     const tabs = [
       { id: 'all', label: 'All Delights' },
-      ...CATEGORIES.map(c => ({ id: c.id, label: c.shortTitle }))
+      ...this.categories.map(c => ({ id: c.id, label: c.shortTitle }))
     ];
 
     tabsContainer.innerHTML = tabs.map(tab => `
@@ -212,13 +219,13 @@ class App {
   }
 
   createProductCardHtml(item) {
-    const categoryObj = CATEGORIES.find(c => c.id === item.category);
-    const catName = categoryObj ? categoryObj.shortTitle : 'Dessert';
+    const categoryObj = this.categories.find(c => c.id === item.category);
+    const catName = categoryObj ? categoryObj.shortTitle : (item.category || 'Dessert');
 
     return `
       <article class="product-card" data-product-id="${item.id}">
         <div class="product-image-box">
-          <img src="${item.image}" alt="${item.name}" loading="lazy" width="400" height="300">
+          <img src="${item.image}" alt="${item.name}" loading="lazy" width="400" height="300" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=800&q=80';">
           ${item.badge ? `<span class="product-badge-corner ${item.bestseller ? 'bestseller' : ''}">${item.badge}</span>` : ''}
           <span class="product-badge-dietary" title="${item.isVeg ? 'Vegetarian' : 'Contains Meat'}">
             ${item.isVeg ? '🌱' : '🥩'}

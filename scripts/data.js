@@ -87,7 +87,7 @@ export const CATEGORIES = [
     shortTitle: "Fries & Hot Snacks",
     count: "6 Sides",
     description: "Golden seasoned loaded fries, melted cheese sticks, and crispy tenders.",
-    image: "https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=800&q=80",
     badge: "Crispy Crunch"
   }
 ];
@@ -204,6 +204,18 @@ export const MENU_ITEMS = [
     isVeg: true,
     calories: "410 kcal"
   },
+  {
+    id: "sh-5",
+    name: "Vanilla Frappé 🥤",
+    category: "shakes",
+    description: "Blended with smooth vanilla bean, chilled milk, and crushed ice for the perfect refreshing treat.",
+    price: 7.60,
+    image: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=800&q=80",
+    bestseller: false,
+    badge: "Chilled",
+    isVeg: true,
+    calories: "380 kcal"
+  },
 
   // --- SUNDAES & WAFFLES ---
   {
@@ -288,7 +300,7 @@ export const MENU_ITEMS = [
     category: "hot-snacks",
     description: "Skin-on crispy shoestring fries tossed in white truffle oil, grated aged parmesan, and fresh rosemary flakes.",
     price: 5.75,
-    image: "https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=800&q=80",
     bestseller: true,
     badge: "Best Seller Side",
     isVeg: true,
